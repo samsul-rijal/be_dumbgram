@@ -56,6 +56,7 @@ exports.login = async (req, res) => {
                 user: {
                     fullname: checkEmail.fullname,
                     username: checkEmail.username,
+                    email: checkEmail.email,
                     token
                 }
             }

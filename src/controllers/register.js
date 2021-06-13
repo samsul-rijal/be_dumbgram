@@ -1,6 +1,7 @@
 const { user } = require('../../models')
 const joi = require('joi')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 exports.registrasi = async (req, res) => {
     try {
@@ -44,12 +45,19 @@ exports.registrasi = async (req, res) => {
             password: hashedPassword
         })
 
+        const secretKey = '23iehf34jhds7s328sd'
+
+        const token = jwt.sign({ 
+            id: dataUser.id
+        }, secretKey)
+
         res.send({
             status: 'success',
             data: ({
                 user: ({
                     fullname: dataUser.fullname,
-                    username: dataUser.username
+                    username: dataUser.username,
+                    token
                 })
             })
         })
