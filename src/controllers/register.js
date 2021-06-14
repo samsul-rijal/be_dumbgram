@@ -44,8 +44,8 @@ exports.registrasi = async (req, res) => {
             ...data,
             password: hashedPassword
         })
-
-        const secretKey = '23iehf34jhds7s328sd'
+        
+        const secretKey = process.env.SECRET_KEY
 
         const token = jwt.sign({ 
             id: dataUser.id

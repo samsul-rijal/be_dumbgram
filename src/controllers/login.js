@@ -44,7 +44,7 @@ exports.login = async (req, res) => {
             })
         }
 
-        const secretKey = '23iehf34jhds7s328sd'
+        const secretKey = process.env.SECRET_KEY
 
         const token = jwt.sign({ 
             id: checkEmail.id
