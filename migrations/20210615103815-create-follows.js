@@ -8,11 +8,23 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      following_id: {
-        type: Sequelize.INTEGER
+      followersId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'id' 
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade'
       },
-      followers_id: {
-        type: Sequelize.INTEGER
+      followingId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'id' 
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade'
       },
       createdAt: {
         allowNull: false,

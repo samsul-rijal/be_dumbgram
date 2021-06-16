@@ -1,40 +1,37 @@
+require('dotenv').config()
 const jwt = require('jsonwebtoken')
+const secretKey = process.env.SECRET_KEY
 
-exports.auth = (req, res, next) => {
-    try {
-        
-        let header = req.header("Authorization")
-        
-        if(!header){
-            return res.send({
-                status: 'Failed',
-                message: 'Access Failed'
-            })
-        }
+const auth = async (req, res, next) => {
+  try {
+    const header = req.header('Authorization')
 
-        let token = header.replace("Bearer ", "")
-
-        const secretKey = '23iehf34jhds7s328sd'
-
-        const verified = jwt.verify(token, secretKey)
-
-        req.idUser = verified.id
-
-        next()
-
-        // res.send({
-        //     verified
-        // })
-
-        // res.send({
-        //     token
-        // })
-
-    } catch (error) {
-        res.send({
-            status: 'failed',
-            message: 'server error'
-        })
-        
+    if (!header) {
+      return res.status(401).send({
+        status: 'failed',
+        message: 'Unauthorized'
+      })
     }
+
+    const token = header.substring('Bearer '.length)
+    const verify = jwt.verify(token, secretKey, (err, decode) => {
+      if (err) {
+        return res.status(401).send({
+          status: 'failed',
+          message: err.message
+        })
+      }
+      return decode.id
+    })
+    req.idUser = verify
+    next()
+  } catch (error) {
+    console.log(error.message)
+    res.status(500).send({
+      status: 'failed',
+      message: 'server error'
+    })
+  }
 }
+
+module.exports = auth
