@@ -35,7 +35,7 @@ exports.updateUser = async (req, res) => {
             where: {
                 id
             }
-        })   
+        })
         
         if(!checkId){
             res.status(404)
@@ -53,6 +53,9 @@ exports.updateUser = async (req, res) => {
         })
 
         const dataUpdate = await user.findOne({
+            attributes: {
+                exclude: ['createdAt', 'updatedAt', 'password']
+            },
             where: {
                 id
             }
@@ -62,7 +65,14 @@ exports.updateUser = async (req, res) => {
             status: 'success',
             message: 'user successffuly updated',
             data: {
-                user: dataUpdate
+                user: {
+                    id: dataUpdate.id,
+                    fullname: dataUpdate.fullname,
+                    email: dataUpdate.email,
+                    username: dataUpdate.username,
+                    image: dataUpdate.image,
+                    bio: dataUpdate.bio
+                }
             }
         })
         

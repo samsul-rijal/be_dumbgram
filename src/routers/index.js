@@ -9,6 +9,7 @@ const { getFollowers, getFollowing } = require('../controllers/follows')
 const { addFeed, getFeedByFollow, getAllFeed } = require('../controllers/feed')
 const { addLike } = require('../controllers/like')
 const { addComment, getComment } = require('../controllers/comment')
+const { addMessage, getMessage } = require('../controllers/message')
 
 const auth  = require('../middleware/auth')
 
@@ -28,5 +29,8 @@ router.get('/feeds', auth, getAllFeed)
 router.post('/like', auth, addLike)
 router.post('/comments', auth, addComment)
 router.get('/comments/:feedId', auth, getComment)
+
+router.post('/message/:idSendTo', auth, addMessage)
+router.get('/message-user/:idSendTo', auth, getMessage)
 
 module.exports = router

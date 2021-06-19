@@ -53,6 +53,7 @@ exports.registrasi = async (req, res) => {
 
         res.send({
             status: 'success',
+            message: 'Register Successfully',
             data: ({
                 user: ({
                     fullname: dataUser.fullname,

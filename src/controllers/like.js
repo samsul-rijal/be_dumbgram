@@ -35,8 +35,8 @@ const addLike = async (req, res) => {
         }
       })
       return res.status(500).send({
-        status: 'failed',
-        message: 'anda sudah like'
+        status: 'success',
+        message: 'unlike succesful'
       })
     }
 
