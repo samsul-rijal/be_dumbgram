@@ -11,8 +11,33 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      user.hasMany(models.follows, {
+        as: 'followers',
+        foreignKey: {
+          name: 'followingId'
+        }
+      }),
+      user.hasMany(models.follows, {
+        as: 'following',
+        foreignKey: {
+          name: 'followersId'
+        }
+      }),
+      user.hasMany(models.feed, {
+        as: 'feed',
+        foreignKey: {
+          name: 'userId'
+        }
+      }),
+      user.hasMany(models.message, {
+        as: 'sender',
+        foreignKey: {
+          name: 'receiverMessageId'
+        }
+      })
     }
   };
+
   user.init({
     email: DataTypes.STRING,
     username: DataTypes.STRING,

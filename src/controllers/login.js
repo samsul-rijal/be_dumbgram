@@ -1,4 +1,4 @@
-const { user } = require('../../models')
+const { user, follows, feed, message } = require('../../models')
 const joi = require('joi')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -50,15 +50,47 @@ exports.login = async (req, res) => {
             id: checkEmail.id
         }, secretKey)
 
+        const dataUser = await user.findOne({
+            where: {
+                id : checkEmail.id
+            },
+
+            include : [{
+                model: follows,
+                as :'followers'
+            },
+            {
+                 model: follows,
+                 as : 'following'
+            },
+            {
+                model: feed,
+                as : 'feed',
+                include : {
+                    model : user,
+                    as : 'user'
+                },
+            },
+            // {
+            //     model: message,
+            //     as : 'sender',
+            //     include : {
+            //         model: user,
+            //         as : 'user'
+            //     },
+            // }
+            ],
+
+            attributes: {
+                exclude: ['createdAt', 'updatedAt', 'password']
+            }
+        })
+
         res.send({
             status: 'success',
-            data: {
-                user: {
-                    fullname: checkEmail.fullname,
-                    username: checkEmail.username,
-                    email: checkEmail.email,
-                    token
-                }
+            user : {
+                dataUser,
+                token
             }
         })
 
@@ -67,6 +99,61 @@ exports.login = async (req, res) => {
         res.status({
             status: 'failed',
             message: 'Server Error'
+        })
+    }
+}
+
+exports.checkAuth = async (req,res) => {
+    try {
+
+        const id = req.idUser
+
+        const dataUser = await user.findOne({
+            where: {
+                id
+            },
+
+            include : [{
+                model: follows,
+                as :'followers'
+            },
+            {
+                 model: follows,
+                 as : 'following'
+            },
+            {
+                model: feed,
+                as : 'feed'
+            },
+            {
+                model: message,
+                as : 'sender'
+            }],
+
+            attributes: {
+                exclude: ['createdAt', 'updatedAt', 'password']
+            }
+        })
+    
+        if(!dataUser){
+            return res.status(404).send({
+                status: 'failed'
+            })
+        }
+
+
+        res.send({
+            status: 'success',
+            data: {
+                user : dataUser
+            }
+        })
+        
+    } catch (error) {
+        console.log(error)
+        res.status({
+            status: 'failed',
+            message: 'Server Error',
         })
     }
 }

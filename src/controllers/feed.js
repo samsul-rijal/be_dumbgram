@@ -8,8 +8,19 @@ const addFeed = async (req, res) => {
     const data = req.body
     const { idUser } = req
 
+    const image = req.files.imageFile[0].filename
+
+    const dataUpload = {
+        ...data,
+        fileName : image,
+        userId : idUser
+    } 
+
+
+    const resultPost = await feed.create( dataUpload )
+
     const schema = Joi.object({
-      fileName: Joi.string().required(),
+      // fileName: Joi.string().required(),
       caption: Joi.string().optional().allow('')
     })
     const { error } = schema.validate(data)
@@ -20,7 +31,7 @@ const addFeed = async (req, res) => {
       })
     }
 
-    const resultPost = await feed.create({ ...data, userId: idUser })
+    // const resultPost = await feed.create({ ...data, userId: idUser })
     const findFeed = await feed.findOne({
       where: {
         id: resultPost.id
@@ -54,14 +65,6 @@ const addFeed = async (req, res) => {
 const getFeedByFollow = async (req, res) => {
   try {
     const { idUser } = req
-    const { id } = req.params
-    const checkAccountPeople = await user.findOne({ where: { id: id } })
-    if (!checkAccountPeople) {
-      return res.status(404).send({
-        status: 'failed',
-        message: 'user not found'
-      })
-    }
 
     const getFollowing = await follows.findAll({
       attributes: ['followingId'],

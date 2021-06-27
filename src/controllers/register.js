@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 
 exports.registrasi = async (req, res) => {
     try {
+
         const { email, password } = req.body
         const data = req.body
 
@@ -12,7 +13,7 @@ exports.registrasi = async (req, res) => {
             email: joi.string().email().min(8).required(),
             username: joi.string().min(6).required(),
             password: joi.string().min(8).required(),
-            fullname: joi.string().min(1).required()
+            fullname: joi.string().min(1).required(),
         })
 
         const { error } = schema.validate(data)
